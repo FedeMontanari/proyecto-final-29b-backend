@@ -1,4 +1,4 @@
-const {User} = require('../../models/user.js')
+const {Professional} = require('../../models/professional.js')
 
 const postUser = async(req, res) => {
     try {
@@ -7,7 +7,7 @@ const postUser = async(req, res) => {
             return res.status(400).send('missing value detected.')
         }
         else {
-            const newProfessional = await User.create({
+            const newProfessional = await Professional.create({
                 fullName,
                 phoneNumber,
                 email,
