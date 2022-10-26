@@ -1,9 +1,9 @@
-const {Professional} = require('../../models/professional.js')
+const {Professional} = require('../../db')
 
 const postUser = async(req, res) => {
     try {
-        const {fullName, phoneNumber, email, occupation, address, description, image} = req.body;
-        if (!fullName || !phoneNumber || !email || !occupation || !address || !description){
+        const {fullName, phoneNumber, email, occupation, address, description, image, password} = req.body;
+        if (!fullName || !phoneNumber || !email || !occupation || !address || !description || !password){
             return res.status(400).send('missing value detected.')
         }
         else {
@@ -14,7 +14,8 @@ const postUser = async(req, res) => {
                 occupation,
                 address,
                 description,
-                image
+                image,
+                password
             })
             return res.status(201).send('new Professional created.')
         }
