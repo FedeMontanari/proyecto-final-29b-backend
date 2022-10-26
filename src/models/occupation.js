@@ -5,13 +5,17 @@ module.exports = (sequelize) => {
     "occupation",
     {
       id: {
-        type: DataTypes.UUID,
-        allowNull: false,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
+        autoIncrement: true,
       },
       name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: false,
       }
     },
     {
