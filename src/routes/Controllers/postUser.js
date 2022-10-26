@@ -1,4 +1,4 @@
-const {User} = require('../../db')
+const {User} = require('../../models/user.js')
 
 const postUser = async(req, res) => {
     try {
