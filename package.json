@@ -1,8 +1,11 @@
 {
   "name": "projecto-final-29b-backend",
   "version": "1.0.0",
-  "description": "\"# projecto-final-29b\"",
+  "description": "Backend del proyecto final cohorte 29-b grupo 12",
   "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
     "start": "nodemon -L"
   },
@@ -17,14 +20,21 @@
   },
   "homepage": "https://github.com/FedeMontanari/projecto-final-29b#readme",
   "dependencies": {
-    "body-parser": "^1.20.1",
-    "express": "^4.18.2",
+    "axios": "^0.27.2",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "morgan": "^1.10.0",
-    "pg": "^8.8.0",
-    "sequelize": "^6.25.3",
-    "typescript": "^4.8.4"
+    "pg": "^8.5.1",
+    "sequelize": "^6.3.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.6",
+    "supertest": "^6.0.1",
+    "supertest-session": "^4.1.0"
   }
 }
