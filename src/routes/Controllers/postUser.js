@@ -1,4 +1,4 @@
-const {Professional} = require('../../models/user.js')
+const {Professional} = require('../../models/professional.js')
 
 const postUser = async(req, res) => {
     try {
