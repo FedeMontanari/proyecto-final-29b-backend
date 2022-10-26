@@ -10,14 +10,14 @@ module.exports = (sequelize) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      fullname: {
+      fullName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      phonenumber: {
+      phoneNumber: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -58,6 +58,13 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        }
+      }
     },
     {
       timestamps: true,
