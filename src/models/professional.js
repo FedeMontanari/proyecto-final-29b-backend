@@ -53,7 +53,7 @@ module.exports = (sequelize) => {
         defaultValue: null
       },
       reviews: {
-        type: DataTypes.ARRAY(DataTypes.JSON),
+        type: DataTypes.ARRAY(DataTypes.STRING),
       },
       password: {
         type: DataTypes.STRING,
