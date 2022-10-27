@@ -50,7 +50,7 @@ module.exports = (sequelize) => {
           isFloat: true,
           isNumeric: true,
         },
-        defaultValue: null
+        defaultValue: null,
       },
       reviews: {
         type: DataTypes.ARRAY(DataTypes.STRING),
@@ -60,17 +60,18 @@ module.exports = (sequelize) => {
         allowNull: false,
         validate: {
           notEmpty: true,
-        }
+        },
       },
       image: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: "https://cdn.discordapp.com/attachments/1031603049287917648/1034914210821460018/user.png",
+        defaultValue:
+          "https://cdn.discordapp.com/attachments/1031603049287917648/1034914210821460018/user.png",
       },
       description: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
     },
     {
       timestamps: true,
