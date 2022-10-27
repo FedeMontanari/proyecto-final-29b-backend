@@ -11,6 +11,7 @@ const postProfessional = async (req, res) => {
       description,
       image,
       password,
+      reviews,
     } = req.body;
     if (
       !fullName ||
@@ -32,6 +33,7 @@ const postProfessional = async (req, res) => {
         description,
         image,
         password,
+        reviews,
       });
       return res.status(201).send("new Professional created.");
     }
