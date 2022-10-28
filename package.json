@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Backend del proyecto final cohorte 29-b grupo 12",
   "main": "index.js",
-  "engines": {
-    "node": "14.x"
-  },
   "directories": {
     "test": "tests"
   },
