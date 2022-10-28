@@ -1,14 +1,13 @@
-const { Router } = require('express');
-const userMiddleware = require('./Middlewares/userMiddleware');
-const adminMiddleware = require('./Middlewares/adminMiddleware');
-const occupationMiddleware = require('./Middlewares/occupationMiddleware')
+const { Router } = require("express");
+const professionalMiddleware = require("./Middlewares/professionalMiddleware");
+const adminMiddleware = require("./Middlewares/adminMiddleware");
+const occupationMiddleware = require("./Middlewares/occupationMiddleware");
+const clientMiddleware = require("./Middlewares/clientMiddleware");
 const router = Router();
 
-
-router.use('/user', userMiddleware);
-router.use('/admin', adminMiddleware);
-router.use('/occupation', occupationMiddleware)
-
-
+router.use("/professional", professionalMiddleware);
+router.use("/admin", adminMiddleware);
+router.use("/occupation", occupationMiddleware);
+router.use("/client", clientMiddleware);
 
 module.exports = router;
