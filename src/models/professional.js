@@ -75,6 +75,14 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      pricing: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          min: 10,
+          max: 60
+        }
+      }
     },
     {
       timestamps: true,

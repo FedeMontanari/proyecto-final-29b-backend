@@ -12,6 +12,8 @@ const postProfessional = async (req, res) => {
       image,
       password,
       reviews,
+      rating,
+      pricing
     } = req.body;
     if (
       !fullName ||
@@ -20,7 +22,8 @@ const postProfessional = async (req, res) => {
       !occupation ||
       !address ||
       !description ||
-      !password
+      !password ||
+      !pricing
     ) {
       return res.status(400).send("missing value detected.");
     } else {
@@ -34,6 +37,8 @@ const postProfessional = async (req, res) => {
         image,
         password,
         reviews,
+        rating,
+        pricing
       });
       return res.status(201).send("new Professional created.");
     }
