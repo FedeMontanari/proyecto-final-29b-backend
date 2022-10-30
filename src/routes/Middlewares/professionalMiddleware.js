@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { getProfessional } = require("../Controllers/getProfessional.js");
 const { postProfessional } = require("../Controllers/postProfessional.js");
+const {deleteProfessional} = require("../Controllers/deleteProfessional.js")
 const { Professional } = require("../../db");
 const router = Router();
 
@@ -32,4 +33,5 @@ router.get("/:fullName", async (req, res) => {
   }
 });
 
+router.delete("", deleteProfessional)
 module.exports = router;
