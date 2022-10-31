@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const { getProfessional } = require("../Controllers/getProfessional.js");
 const { postProfessional } = require("../Controllers/postProfessional.js");
-const {deleteProfessional} = require("../Controllers/deleteProfessional.js")
 const { Professional } = require("../../db");
 const router = Router();
 
@@ -33,5 +32,29 @@ router.get("/:fullName", async (req, res) => {
   }
 });
 
-router.delete("", deleteProfessional)
+router.delete("/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    if (!email) return res.status(200).send("Missing value detected.");
+    else {
+      let prof = await Professional.findOne({
+        where: {
+          email: email,
+        },
+      });
+
+      if (prof.length !== 0) {
+        Professional.destroy({
+          where: {
+            email: email,
+          },
+        });
+        return res.status(200).send("Professional deleted.");
+      } else res.status(404).send("Professional not found.");
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 module.exports = router;
