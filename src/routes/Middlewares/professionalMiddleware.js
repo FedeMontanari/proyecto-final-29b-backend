@@ -5,7 +5,9 @@ const { Professional } = require("../../db");
 const router = Router();
 
 router.get("", getProfessional);
+
 router.post("", postProfessional);
+
 router.get("/:fullName", async (req, res) => {
   let { fullName } = req.params;
   let arr = fullName.split(" ");
@@ -24,6 +26,24 @@ router.get("/:fullName", async (req, res) => {
     });
     if (findProfessional.length === 0) {
       res.status(400).send("Name not found");
+    } else {
+      res.status(200).json(findProfessional);
+    }
+  } catch (error) {
+    res.status(400).send(console.log(error));
+  }
+});
+
+router.get("/id/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const findProfessional = await Professional.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (findProfessional.length === 0) {
+      res.status(404).send("Professional not found");
     } else {
       res.status(200).json(findProfessional);
     }
