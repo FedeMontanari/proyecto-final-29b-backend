@@ -55,8 +55,10 @@ router.delete("/:email", async (req, res) => {
       } else res.status(404).send("Professional not found.");
     }
   } catch (e) {
-    console.log(e);
-    
+    res.status(400).send(console.log(e));
+  }
+});
+
 router.get("/id/:id", async (req, res) => {
   const { id } = req.params;
   try {
