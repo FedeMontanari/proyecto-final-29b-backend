@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { Op } = require("sequelize")
 const { getProfessional } = require("../Controllers/getProfessional.js");
 const { postProfessional } = require("../Controllers/postProfessional.js");
 const { Professional } = require("../../db");
@@ -21,7 +22,7 @@ router.get("/:fullName", async (req, res) => {
   try {
     const findProfessional = await Professional.findAll({
       where: {
-        fullName: arr,
+        fullName: { [Op.startsWith]: arr },
       },
     });
     if (findProfessional.length === 0) {
