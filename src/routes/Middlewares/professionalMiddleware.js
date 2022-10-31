@@ -34,6 +34,29 @@ router.get("/:fullName", async (req, res) => {
   }
 });
 
+router.delete("/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    if (!email) return res.status(200).send("Missing value detected.");
+    else {
+      let prof = await Professional.findOne({
+        where: {
+          email: email,
+        },
+      });
+
+      if (prof.length !== 0) {
+        Professional.destroy({
+          where: {
+            email: email,
+          },
+        });
+        return res.status(200).send("Professional deleted.");
+      } else res.status(404).send("Professional not found.");
+    }
+  } catch (e) {
+    console.log(e);
+    
 router.get("/id/:id", async (req, res) => {
   const { id } = req.params;
   try {
