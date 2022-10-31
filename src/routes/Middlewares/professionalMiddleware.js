@@ -32,4 +32,51 @@ router.get("/:fullName", async (req, res) => {
   }
 });
 
+router.put("", async (req, res) => {
+  try {
+    const {
+      fullName,
+      phoneNumber,
+      email,
+      occupation,
+      address,
+      description,
+      image,
+      password,
+      reviews,
+      rating,
+      pricing,
+    } = req.body;
+    
+
+    if (email) {
+      const prof = await Professional.findOne({
+        where: {
+          email: email,
+        },
+      });
+
+      if (prof)
+        var updateProf = {
+          fullName,
+          phoneNumber,
+          email,
+          occupation,
+          address,
+          description,
+          image,
+          password,
+          reviews,
+          rating,
+          pricing,
+        };
+
+      prof.update(updateProf);
+      return res.status(200).send("professional Updated.");
+    }
+  } catch (e) {
+    return res.status(404).send("Professional not found.");
+  }
+});
+
 module.exports = router;
