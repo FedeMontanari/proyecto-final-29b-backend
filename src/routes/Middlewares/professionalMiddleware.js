@@ -22,7 +22,7 @@ router.get("/:fullName", async (req, res) => {
   try {
     const findProfessional = await Professional.findAll({
       where: {
-        fullName: { [Op.startsWith]: arr },
+        fullName: { [Op.like]: `%${arr}%` },
       },
     });
     if (findProfessional.length === 0) {
