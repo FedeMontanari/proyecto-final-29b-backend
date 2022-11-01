@@ -41,12 +41,12 @@ router.delete("/:email", async (req, res) => {
     if (!email) return res.status(200).send("Missing value detected.");
     else {
       let prof = await Professional.findOne({
+
         where: {
           email: email,
         },
       });
-
-      if (prof.length !== 0) {
+            if (prof.length !== 0) {
         Professional.destroy({
           where: {
             email: email,
@@ -75,7 +75,45 @@ router.get("/id/:id", async (req, res) => {
     }
   } catch (error) {
     res.status(400).send(console.log(error));
-  }
+      }
 });
+
+router.put("", async (req, res) => {
+  try {
+    const {
+      fullName,
+      phoneNumber,
+      email,
+      occupation,
+      address,
+      description,
+      image,
+      password,
+      reviews,
+      rating,
+      pricing,
+    } = req.body;
+    if (email) {
+      const prof = await Professional.findOne({
+      if (prof)
+        var updateProf = {
+          fullName,
+          phoneNumber,
+          email,
+          occupation,
+          address,
+          description,
+          image,
+          password,
+          reviews,
+          rating,
+          pricing,
+        };
+
+      prof.update(updateProf);
+      return res.status(200).send("professional Updated.");
+    }
+  } catch (e) {
+    return res.status(404).send("Professional not found.");
 
 module.exports = router;
