@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { Op } = require("sequelize")
+const { Op } = require("sequelize");
 const { getProfessional } = require("../Controllers/getProfessional.js");
 const { postProfessional } = require("../Controllers/postProfessional.js");
 const { Professional } = require("../../db");
@@ -41,12 +41,11 @@ router.delete("/:email", async (req, res) => {
     if (!email) return res.status(200).send("Missing value detected.");
     else {
       let prof = await Professional.findOne({
-
         where: {
           email: email,
         },
       });
-            if (prof.length !== 0) {
+      if (prof.length !== 0) {
         Professional.destroy({
           where: {
             email: email,
@@ -75,28 +74,32 @@ router.get("/id/:id", async (req, res) => {
     }
   } catch (error) {
     res.status(400).send(console.log(error));
-      }
+  }
 });
 
 router.put("", async (req, res) => {
+  const {
+    fullName,
+    phoneNumber,
+    email,
+    occupation,
+    address,
+    description,
+    image,
+    password,
+    reviews,
+    rating,
+    pricing,
+  } = req.body;
   try {
-    const {
-      fullName,
-      phoneNumber,
-      email,
-      occupation,
-      address,
-      description,
-      image,
-      password,
-      reviews,
-      rating,
-      pricing,
-    } = req.body;
     if (email) {
       const prof = await Professional.findOne({
-      if (prof)
-        var updateProf = {
+        where: {
+          email: email,
+        },
+      });
+      if(prof){
+        const updateProf = {
           fullName,
           phoneNumber,
           email,
@@ -109,11 +112,15 @@ router.put("", async (req, res) => {
           rating,
           pricing,
         };
-
-      prof.update(updateProf);
-      return res.status(200).send("professional Updated.");
+        prof.update(updateProf);
+        return res.status(200).send("Professional Updated.");
+      }
+    } else {
+      return res.status(404).send("Professional not found")
     }
   } catch (e) {
-    return res.status(404).send("Professional not found.");
+    return res.status(404).send(console.log(e));
+  }
+});
 
 module.exports = router;
