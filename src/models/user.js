@@ -19,11 +19,10 @@ module.exports = (sequelize) => {
         },
       },
       phoneNumber: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
-          isNumeric: true,
         },
       },
       email: {
