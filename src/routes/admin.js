@@ -1,6 +1,8 @@
-const { Admin } = require("../../db");
+const { Router } = require("express");
+const { Admin } = require("../db");
+const router = Router();
 
-const postAdmin = async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
     if (!fullName || !email || !password) {
@@ -16,6 +18,15 @@ const postAdmin = async (req, res) => {
   } catch (e) {
     return res.status(400).send(console.log(e));
   }
-};
+});
 
-module.exports = { postAdmin };
+router.get("/", async (req, res) => {
+  try {
+    const allAdmins = await Admin.findAll();
+    return res.json(allAdmins);
+  } catch (error) {
+    return res.status(404).send(console.log(error));
+  }
+});
+
+module.exports = router;

@@ -2,13 +2,14 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "client",
+    "user",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
+        autoIncrement: true,
+        unique: true,
       },
       fullName: {
         type: DataTypes.STRING,
@@ -33,23 +34,16 @@ module.exports = (sequelize) => {
           isEmail: true,
         },
       },
+      occupation: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
+      },
       address: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
-      },
-      rating: {
-        type: DataTypes.FLOAT,
-        validate: {
-          isFloat: true,
-          isNumeric: true,
-        },
-        defaultValue: null,
-      },
-      reviews: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
       },
       password: {
         type: DataTypes.STRING,
@@ -70,6 +64,20 @@ module.exports = (sequelize) => {
       description: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      birthday: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+          isDate: true,
+        },
+      },
+      isProfessional: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {
