@@ -28,7 +28,7 @@ router.get("", async (req, res) => {
   }
 });
 
-router.get("/:occupation", async (req, res) => {
+router.get("/name/:occupation", async (req, res) => {
   let { occupation } = req.params;
   let arr = occupation.split("");
   arr = arr.map((e) => {
