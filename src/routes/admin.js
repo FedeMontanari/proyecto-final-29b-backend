@@ -29,4 +29,60 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.put("/id/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fullName, email, password } = req.body;
+    if (!fullName || !email || !password) {
+      return res.status(400).send("missing value detected.");
+    }
+    if (id) {
+      const adminFound = await Admin.findOne({
+        where: {
+          id: id,
+        },
+      });
+      if (adminFound) {
+        const updateAdmin = {
+          fullName,
+          email,
+          password,
+        };
+        adminFound.update(updateAdmin);
+        return res.status(200).send("Admin Updated successfully.");
+      } else {
+        return res.status(404).send("Admin with that ID could not be found");
+      }
+    } else {
+      return res.status(400).send("No ID provided");
+    }
+  } catch (e) {
+    return res.status(400).send(console.log(e));
+  }
+});
+
+router.delete("/id/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) res.status(400).send("Missing value detected.");
+    else {
+      let adminFound = await Admin.findOne({
+        where: {
+          id: id,
+        },
+      });
+      if (adminFound.length !== 0) {
+        Admin.destroy({
+          where: {
+            id: id,
+          },
+        });
+        return res.status(200).send("Admin deleted.");
+      } else res.status(404).send("Admin not found.");
+    }
+  } catch (e) {
+    res.status(400).send(console.log(e));
+  }
+});
+
 module.exports = router;
