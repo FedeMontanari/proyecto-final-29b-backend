@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const { Admin } = require("../db");
-const admin = require("../models/admin");
 const router = Router();
 
 router.post("/", async (req, res) => {
