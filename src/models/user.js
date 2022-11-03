@@ -35,7 +35,10 @@ module.exports = (sequelize) => {
       },
       occupation: {
         type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
+        allowNull: true,
+        validate: {
+          notEmpty: false,
+        }
       },
       address: {
         type: DataTypes.STRING,
