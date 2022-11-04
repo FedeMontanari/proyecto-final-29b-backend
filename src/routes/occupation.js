@@ -69,4 +69,65 @@ router.get("/name/:occupation", async (req, res) => {
   }
 });
 
+router.put("/id/:id", async(req, res) => {
+  if(API_KEY === req.query.apikey) {
+    try {
+      const idParams = req.params.id;
+      const { name, image } = req.body;
+      if(!idParams) return res.status(400).send("Missing value detected.");
+      if (isNaN(idParams)) return res.status(400).send("ID must be a number");
+      if(idParams) {
+        const toUpdateOccupation = await Occupation.findOne({
+          where: {
+            id: idParams
+          }
+        })
+        if(toUpdateOccupation) {
+          const updatedOccupation = {
+            name,
+            image
+          }
+          toUpdateOccupation.update(updatedOccupation);
+          return res.status(200).send("Occupation updated successfully.");
+        } else {
+          return res.status(404).send("Occupation could not be found.");
+        }
+      } else {
+        return res.status(404).send("Missing value detected.");
+      }
+    } catch (error) {
+      return res.status(404).send(console.log(error));
+    }
+  } else {
+    return res.status(400).send("Wrong or missing key");
+  }
+});
+
+router.delete("/id/:id", async(req, res) => {
+  if(API_KEY === req.query.apikey) {
+    try {
+      const idParams = req.params.id;
+      if(!idParams) return res.status(400).send("Missing value detected.");
+      if (isNaN(idParams)) return res.status(400).send("ID must be a number");
+      const toDeleteOccupation = await Occupation.findOne({
+        where: {
+          id: idParams
+        }
+      })
+      if(toDeleteOccupation) {
+        Occupation.destroy({
+          where: {
+            id: idParams
+          }
+        })
+        return res.status(200).send("Occupation deleted.");
+      } else res.status(404).send("Occupation not found.");
+    } catch (error) {
+      return res.status(400).send(console.log(error));
+    }
+  } else {
+    return res.status(400).send("Wrong or missing API key");
+  }
+});
+
 module.exports = router;
