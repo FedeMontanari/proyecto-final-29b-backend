@@ -5,10 +5,11 @@ module.exports = (sequelize) => {
     "admin",
     {
       id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
+        unique: true,
+        autoIncrement: true,
       },
       fullName: {
         type: DataTypes.STRING,

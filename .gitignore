@@ -106,3 +106,6 @@ dist
 
 # package-lock.json
 package-lock.json
+
+# Users JSON mockup
+userOutput.txt
