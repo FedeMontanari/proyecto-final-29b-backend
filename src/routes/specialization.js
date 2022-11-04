@@ -80,8 +80,8 @@ router.delete("/id/:id", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
       const { id } = req.params;
-      if (isNaN(id)) res.status(400).send("ID must be a number");
       if (!id) res.status(400).send("Missing value detected.");
+      if (isNaN(id)) res.status(400).send("ID must be a number");
       else {
         let specialty = await Specialization.findOne({
           where: {
