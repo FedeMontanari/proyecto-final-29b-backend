@@ -98,11 +98,11 @@ router.post("/", async (req, res) => {
       } else {
         const oldUser = await User.findOne({
           where: {
-            email: email
-          }
-        })
+            email: email,
+          },
+        });
         if (oldUser) {
-          return res.status(400).send("User with that email already exists")
+          return res.status(400).send("User with that email already exists");
         }
         const newUser = await User.create({
           fullName,
@@ -219,5 +219,13 @@ router.post("/bulk", async (req, res) => {
     return res.status(400).send("Wrong or missing API key");
   }
 });
+
+router.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/login" }),
+  async (req, res) => {
+    req.send("Successful login");
+  }
+);
 
 module.exports = router;
