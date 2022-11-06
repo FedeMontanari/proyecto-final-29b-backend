@@ -9,7 +9,29 @@ module.exports = (sequelize) => {
       unique: true,
       autoIncrement: true,
     },
-    name: {
+    occupation: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    generalDescription: {
+      type: DataTypes.TEXT,
+    },
+    availableDays: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+    },
+    images: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+    },
+    specialities: {
+      type: DataTypes.ARRAY(DataTypes.JSON),
+    },
+  },{
+    freezeTableName: true,
+  })
+    /* name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -30,5 +52,5 @@ module.exports = (sequelize) => {
         min: 0,
       },
     },
-  });
+  }); */
 };
