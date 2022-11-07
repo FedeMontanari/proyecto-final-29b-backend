@@ -225,7 +225,7 @@ router.post(
   "/login",
   passport.authenticate("local", { failureRedirect: "/login" }),
   async (req, res) => {
-    req.send("Successful login");
+    res.send("Successful login");
   }
 );
 
