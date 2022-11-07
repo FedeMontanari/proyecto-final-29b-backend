@@ -28,8 +28,6 @@ module.exports = (sequelize) => {
     specialities: {
       type: DataTypes.ARRAY(DataTypes.JSON),
     },
-  },{
-    freezeTableName: true,
   })
     /* name: {
       type: DataTypes.STRING,
