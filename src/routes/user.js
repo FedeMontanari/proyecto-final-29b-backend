@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { User } = require("../db");
 const { Op } = require("sequelize");
 const { API_KEY } = process.env;
+const passport = require("passport");
 const router = Router();
 
 router.get("/name/:fullName", async (req, res) => {
