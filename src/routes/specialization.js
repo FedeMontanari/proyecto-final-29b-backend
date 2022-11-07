@@ -1,21 +1,33 @@
 const { Router } = require("express");
-const { Specialization } = require("../db");
+const { Specialization, User} = require("../db");
 const { API_KEY } = process.env;
 const router = Router();
 
 router.post("", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
-      const { name, description, pricing } = req.body;
-      if (!name || !description || !pricing) {
+      const { occupation, generalDescription, availableDays, images, specialities, email } = req.body;
+      if (!occupation || !specialities || !email) {
         return res.status(400).send("Missing value detected.");
       } else {
         const newSpecialization = await Specialization.create({
-          name,
-          description,
-          pricing,
+          occupation,
+          generalDescription,
+          availableDays,
+          images,
+          specialities,
         });
-        return res.status(201).send("New specialization created.");
+        const user = await User.findOne({
+          where: {
+            email: email,
+          }
+        })
+        if(user) {
+          user.addSpecialization(newSpecialization);
+          return res.status(201).send("New specialization created.");
+        } else {
+          return res.status(400).send("No user with that email")
+        }
       }
     } catch (e) {
       return res.status(400).send(console.log(e));
@@ -45,7 +57,7 @@ router.put("/id/:id", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
       const idParam = req.params.id;
-      const { name, description, pricing } = req.body;
+      const { occupation, generalDescription, availableDays, images, specialities } = req.body;
       if (isNaN(idParam)) res.status(400).send("ID must be a number");
       if (idParam) {
         const specialty = await Specialization.findOne({
@@ -55,11 +67,12 @@ router.put("/id/:id", async (req, res) => {
         });
         if (specialty) {
           const updateSpecialty = {
-            name,
-            description,
-            pricing,
+            occupation,
+            generalDescription,
+            availableDays,
+            images,
+            specialities
           };
-
           specialty.update(updateSpecialty);
           return res.status(200).send("Specialization updated successfully.");
         } else {
