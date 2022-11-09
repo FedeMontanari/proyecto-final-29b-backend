@@ -223,7 +223,7 @@ router.post("/bulk", async (req, res) => {
 
 router.post(
   "/login",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", { failureMessage: true }),
   async (req, res) => {
     res.send("Successful login");
   }
