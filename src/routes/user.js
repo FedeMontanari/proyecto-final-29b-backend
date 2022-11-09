@@ -3,6 +3,8 @@ const { User } = require("../db");
 const { Op } = require("sequelize");
 const { API_KEY } = process.env;
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = process.env;
 const router = Router();
 
 router.get("/name/:fullName", async (req, res) => {
@@ -228,5 +230,33 @@ router.post(
     req.send("Successful login");
   }
 );
+
+router.post("/token", async (req, res) => {
+  const { email, password } = req.body;
+  if (API_KEY === req.query.apikey) {
+    const findUser = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+    if (!findUser) {
+      return res.status(400).json({ message: "No user found with that email" });
+    }
+    if (findUser.password === password) {
+      const token = jwt.sign(
+        { id: findUser.id, fullName: findUser.fullName, role: 1 },
+        JWT_SECRET,
+        {
+          expiresIn: "15d",
+        }
+      );
+      return res.status(200).json(token);
+    } else {
+      return res.status(400).json({ message: "Password is incorrect" });
+    }
+  } else {
+    return res.status(400).send("Wrong or missing API key");
+  }
+});
 
 module.exports = router;
