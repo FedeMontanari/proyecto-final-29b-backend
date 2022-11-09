@@ -1,10 +1,9 @@
 const { Router } = require("express");
 const { User } = require("../db");
 const { Op } = require("sequelize");
-const { API_KEY } = process.env;
+const { API_KEY, JWT_SECRET } = process.env;
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
 const router = Router();
 
 router.get("/name/:fullName", async (req, res) => {
@@ -244,6 +243,7 @@ router.post("/token", async (req, res) => {
     }
     if (findUser.password === password) {
       const token = jwt.sign(
+        //Añadir roles dependiendo del rol en la app
         { id: findUser.id, fullName: findUser.fullName, role: 1 },
         JWT_SECRET,
         {
@@ -256,6 +256,14 @@ router.post("/token", async (req, res) => {
     }
   } else {
     return res.status(400).send("Wrong or missing API key");
+  }
+});
+
+router.get("/authorize", passport.authenticate("jwt"), async (req, res) => {
+  try {
+    res.status(200).json({ message: "User is authorized" });
+  } catch (error) {
+    res.status(400).json({ error: error });
   }
 });
 
