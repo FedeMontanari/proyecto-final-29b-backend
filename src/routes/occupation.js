@@ -130,4 +130,17 @@ router.delete("/id/:id", async(req, res) => {
   }
 });
 
+router.post("/bulk", async (req, res) => {
+  if (API_KEY === req.query.apikey) {
+    try {
+      const newOccupations = await Occupation.bulkCreate(req.body);
+      return res.status(200).send("Bulk created Pog");
+    } catch (e) {
+      return res.status(400).send(console.log(e));
+    }
+  } else {
+    return res.status(400).send("Wrong or missing API key");
+  }
+});
+
 module.exports = router;
