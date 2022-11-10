@@ -122,3 +122,5 @@ router.delete("/id/:id", async (req, res) => {
     return res.status(412).json({ message: "Wrong or missing API Key." });
   }
 });
+
+module.exports = router;
