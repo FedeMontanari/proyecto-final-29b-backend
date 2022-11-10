@@ -49,21 +49,21 @@ router.get("", async (req, res) => {
       if(allReviews.length===0) res.status(404).json({message: "No reviews added yet."})
       return res.json(allReviews);
     } catch (e) {
-      return res.status(404).json(e);
+      return res.status(400).json(e);
     }
   } else {
     return res.status(400).json({ message: "Wrong or missing API Key." });
   }
 });
 
-router.get("/name/:clientId", async (req, res) => {
+router.get("/clienid/:clientid", async (req, res) => {
   if (API_KEY === req.query.apikey) {
-    const { clientId } = req.params;
+    const { clientid } = req.params;
     // capitalize(review)
     try {
       const findReview = await Review.findAll({
         where: {
-          clientId: clientId,
+          clientId: clientid,
         },
       });
       if (findReview.length === 0) {
@@ -77,14 +77,14 @@ router.get("/name/:clientId", async (req, res) => {
   }
 });
 
-router.get("/name/:professionalId", async (req, res) => {
+router.get("/professionalid/:professionalid", async (req, res) => {
   if (API_KEY === req.query.apikey) {
-    const { professionalId } = req.params;
+    const { professionalid } = req.params;
     // capitalize(review)
     try {
       const findReview = await Review.findAll({
         where: {
-          professionalId: professionalId,
+          professionalId: professionalid,
         },
       });
       if (findReview.length === 0) {
