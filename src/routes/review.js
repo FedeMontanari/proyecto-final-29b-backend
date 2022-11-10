@@ -38,7 +38,7 @@ router.post("", async (req, res) => {
       return res.status(400).json(e);
     }
   } else {
-    return res.status(400).json({ message: "Wrong or missing API Key." });
+    return res.status(403).json({ message: "Wrong or missing API Key." });
   }
 });
 
@@ -52,7 +52,7 @@ router.get("", async (req, res) => {
       return res.status(400).json(e);
     }
   } else {
-    return res.status(400).json({ message: "Wrong or missing API Key." });
+    return res.status(403).json({ message: "Wrong or missing API Key." });
   }
 });
 
@@ -72,7 +72,7 @@ router.get("/clienid/:clientid", async (req, res) => {
         res.status(200).json(findReview);
       }
     } catch (e) {
-      res.status(404).json({ message: "Wrong or missing API key." });
+      res.status(403).json({ message: "Wrong or missing API key." });
     }
   }
 });
@@ -88,12 +88,12 @@ router.get("/professionalid/:professionalid", async (req, res) => {
         },
       });
       if (findReview.length === 0) {
-        res.status(404).json({ message: "Review not found." });
+        res.status(404).json({ message: "Professional with no reviewa yet." });
       } else {
         res.status(200).json(findReview);
       }
     } catch (e) {
-      res.status(412).json({ message: "Wrong or missing API key." });
+      res.status(403).json({ message: "Wrong or missing API key." });
     }
   }
 });
@@ -120,7 +120,7 @@ router.delete("/id/:id", async (req, res) => {
     } catch (e) {
       return res.status(400).json(e);
     }
-    return res.status(412).json({ message: "Wrong or missing API Key." });
+    return res.status(403).json({ message: "Wrong or missing API Key." });
   }
 });
 
