@@ -19,16 +19,30 @@ module.exports = (sequelize) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     description: {
       type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    price: {
-      type: DataTypes.STRING,
+    pricing: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     pictures: {
       type: DataTypes.ARRAY(DataTypes.STRING),
@@ -36,27 +50,5 @@ module.exports = (sequelize) => {
     availableDays: {
       type: DataTypes.ARRAY(DataTypes.STRING),
     },
-  });
-  /* name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    pricing: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: 0,
-      },
-    },
-  }); */
+  }); 
 };
