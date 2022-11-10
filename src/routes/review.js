@@ -46,6 +46,7 @@ router.get("", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
       const allReviews = await Review.findAll();
+      if(allReviews.length===0) res.status(404).json({message: "No reviews added yet."})
       return res.json(allReviews);
     } catch (e) {
       return res.status(404).json(e);
