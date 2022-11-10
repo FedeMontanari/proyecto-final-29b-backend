@@ -21,7 +21,7 @@ router.post("", async (req, res) => {
         picture,
         isProfessional,
       } = req.body;
-      if (!clientId || !professionalId || !review || !rating || !picture) {
+      if (!clientId || !professionalId || !review || !rating) {
         return res.status(400).json({ message: "missing value detected." });
       } else {
         const newReview = await Review.create({
