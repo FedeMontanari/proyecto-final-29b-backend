@@ -1,12 +1,14 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const routes = require("./routes/index.js");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const routes = require("./routes/index.js");
 const passport = require("passport");
 const PassportLocal = require("passport-local");
+const PassportJWT = require("passport-jwt");
 const { User } = require("./db");
+const { JWT_SECRET } = process.env;
 
 passport.use(
   new PassportLocal.Strategy(
@@ -32,6 +34,19 @@ passport.use(
       }
     }
   )
+);
+
+passport.use(
+  new PassportJWT.Strategy({
+    jwtFromRequest: PassportJWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: JWT_SECRET,
+  }, (payload, done) => {
+    try {
+      done(null, payload)
+    } catch (error) {
+      done(error)
+    }
+  })
 );
 
 require("./db.js");
@@ -68,6 +83,9 @@ server.use(
 server.use(passport.initialize());
 server.use(passport.session());
 passport.serializeUser(function (user, done) {
+  if (user.password) {
+    delete user.password;
+  }
   done(null, user.id);
 });
 passport.deserializeUser(function (id, done) {
