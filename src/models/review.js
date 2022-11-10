@@ -13,13 +13,29 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    rating: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 0,
+        max: 5,
+        notEmpty: true,
+      }
+    },
+    picture: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
     isProfessional: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
     date: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      }
     },
   });
 };

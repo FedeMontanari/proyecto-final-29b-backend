@@ -1,13 +1,13 @@
 const {DataTypes} = require('sequelize')
 
 module.exports = (sequelize) => {
-  sequelize.define('Job', {
+  sequelize.define('job', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    clienId: {
+    clientId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
