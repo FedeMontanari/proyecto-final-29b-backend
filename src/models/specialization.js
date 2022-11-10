@@ -9,27 +9,21 @@ module.exports = (sequelize) => {
       unique: true,
       autoIncrement: true,
     },
-    occupation: {
-      type: DataTypes.STRING,
+    categoryId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    generalDescription: {
-      type: DataTypes.TEXT,
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    availableDays: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-    },
-    images: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-    },
-    specialities: {
-      type: DataTypes.ARRAY(DataTypes.JSON),
-    },
-  })
-    /* name: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -37,18 +31,24 @@ module.exports = (sequelize) => {
       },
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
     pricing: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
-        min: 0,
+        notEmpty: true,
       },
     },
-  }); */
+    pictures: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+    },
+    availableDays: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+    },
+  }); 
 };
