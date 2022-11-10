@@ -9,27 +9,35 @@ module.exports = (sequelize) => {
       unique: true,
       autoIncrement: true,
     },
-    occupation: {
-      type: DataTypes.STRING,
+    categoryId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    generalDescription: {
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
       type: DataTypes.TEXT,
+    },
+    price: {
+      type: DataTypes.STRING,
+    },
+    pictures: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
     },
     availableDays: {
       type: DataTypes.ARRAY(DataTypes.STRING),
     },
-    images: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-    },
-    specialities: {
-      type: DataTypes.ARRAY(DataTypes.JSON),
-    },
-  })
-    /* name: {
+  });
+  /* name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
