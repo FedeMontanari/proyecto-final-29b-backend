@@ -1,8 +1,14 @@
 const { Router } = require("express");
-const { Occupation } = require("../db");
+const { Category } = require("../db");
 const { Op } = require("sequelize");
 const { API_KEY } = process.env;
 const router = Router();
+
+const capitalize = (fullName) =>
+  fullName
+    .split(" ")
+    .map((name) => `${name[0].toUpperCase()}${name.slice(1)}`)
+    .join(" ");
 
 router.post("", async (req, res) => {
   if (API_KEY === req.query.apikey) {
@@ -11,14 +17,14 @@ router.post("", async (req, res) => {
       if (!name || !image) {
         return res.status(400).send("missing value detected.");
       } else {
-        const newOccupation = await Occupation.create({
+        const newCategory = await Category.create({
           name,
           image,
         });
-        return res.status(201).send("new Occupation created.");
+        return res.status(201).send("new Category created.");
       }
-    } catch (e) {
-      return res.status(400).send(console.log(e));
+    } catch (error) {
+      return res.status(400).json({ message: "Error detected", error: error });
     }
   } else {
     return res.status(400).send("Wrong or missing API key");
@@ -28,8 +34,8 @@ router.post("", async (req, res) => {
 router.get("", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
-      const allOccupations = await Occupation.findAll();
-      return res.json(allOccupations);
+      const allCategorys = await Category.findAll();
+      return res.json(allCategorys);
     } catch (error) {
       return res.status(404).send(console.log(error));
     }
@@ -38,10 +44,10 @@ router.get("", async (req, res) => {
   }
 });
 
-router.get("/name/:occupation", async (req, res) => {
+router.get("/name/:category", async (req, res) => {
   if (API_KEY === req.query.apikey) {
-    let { occupation } = req.params;
-    let arr = occupation.split(" ");
+    let { category } = req.params;
+    let arr = category.split(" ");
     arr = arr.map((e) => {
       let word = e.split("");
       word[0] = word[0].toUpperCase();
@@ -49,48 +55,52 @@ router.get("/name/:occupation", async (req, res) => {
       return word;
     });
     arr = arr.join(" ");
-    console.log(arr)
+    console.log(arr);
     try {
-      const findOccupation = await Occupation.findAll({
+      const findCategory = await Category.findAll({
         where: {
-          name:  {[Op.like]: `%${arr}%` },
+          name: { [Op.like]: `%${arr}%` },
         },
       });
-      if (findOccupation.length === 0) {
-        res.status(400).send("Occupation not found");
+      if (findCategory.length === 0) {
+        res.status(400).send("Category not found");
       } else {
-        res.status(200).json(findOccupation);
+        res.status(200).json(findCategory);
       }
     } catch (error) {
-      res.status(400).send(console.log(error));
+      res
+        .status(400)
+        .send({ message: "Error detected", error: error }, console.log(error));
     }
   } else {
     return res.status(400).send("Wrong or missing key");
   }
 });
 
-router.put("/id/:id", async(req, res) => {
-  if(API_KEY === req.query.apikey) {
+router.put("/id/:id", async (req, res) => {
+  if (API_KEY === req.query.apikey) {
     try {
       const idParams = req.params.id;
       const { name, image } = req.body;
-      if(!idParams) return res.status(400).send("Missing value detected.");
+      if (!idParams) return res.status(400).send("Missing value detected.");
       if (isNaN(idParams)) return res.status(400).send("ID must be a number");
-      if(idParams) {
-        const toUpdateOccupation = await Occupation.findOne({
+      if (idParams) {
+        const toUpdateCategory = await Category.findOne({
           where: {
-            id: idParams
-          }
-        })
-        if(toUpdateOccupation) {
-          const updatedOccupation = {
-            name,
-            image
-          }
-          toUpdateOccupation.update(updatedOccupation);
-          return res.status(200).send("Occupation updated successfully.");
+            id: idParams,
+          },
+        });
+        if (toUpdateCategory) {
+          const capitalName = capitalize(name);
+          const updatedCategory = {
+            name: capitalName,
+            image,
+          };
+          console.log(updatedCategory)
+          toUpdateCategory.update(updatedCategory);
+          return res.status(200).send("Category updated successfully.");
         } else {
-          return res.status(404).send("Occupation could not be found.");
+          return res.status(404).send("Category could not be found.");
         }
       } else {
         return res.status(404).send("Missing value detected.");
@@ -103,25 +113,25 @@ router.put("/id/:id", async(req, res) => {
   }
 });
 
-router.delete("/id/:id", async(req, res) => {
-  if(API_KEY === req.query.apikey) {
+router.delete("/id/:id", async (req, res) => {
+  if (API_KEY === req.query.apikey) {
     try {
       const idParams = req.params.id;
-      if(!idParams) return res.status(400).send("Missing value detected.");
+      if (!idParams) return res.status(400).send("Missing value detected.");
       if (isNaN(idParams)) return res.status(400).send("ID must be a number");
-      const toDeleteOccupation = await Occupation.findOne({
+      const toDeleteCategory = await Category.findOne({
         where: {
-          id: idParams
-        }
-      })
-      if(toDeleteOccupation) {
-        Occupation.destroy({
+          id: idParams,
+        },
+      });
+      if (toDeleteCategory) {
+        Category.destroy({
           where: {
-            id: idParams
-          }
-        })
-        return res.status(200).send("Occupation deleted.");
-      } else res.status(404).send("Occupation not found.");
+            id: idParams,
+          },
+        });
+        return res.status(200).send("Category deleted.");
+      } else res.status(404).send("Category not found.");
     } catch (error) {
       return res.status(400).send(console.log(error));
     }
@@ -133,7 +143,7 @@ router.delete("/id/:id", async(req, res) => {
 router.post("/bulk", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
-      const newOccupations = await Occupation.bulkCreate(req.body);
+      const newCategorys = await Category.bulkCreate(req.body);
       return res.status(200).send("Bulk created Pog");
     } catch (e) {
       return res.status(400).send(console.log(e));
