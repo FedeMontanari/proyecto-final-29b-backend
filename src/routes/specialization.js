@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { Specialization, User } = require("../db");
+const { Specialization, User, Category } = require("../db");
 const { API_KEY } = process.env;
 const router = Router();
 
@@ -15,31 +15,40 @@ router.post("", async (req, res) => {
         userId,
         pricing,
       } = req.body;
+
       if (!categoryId || !userId || !description || !name || !pricing) {
         return res.status(400).json({ message: "Missing value detected." });
       } else {
-        const newSpecialization = await Specialization.create({
-          categoryId,
-          name,
-          description,
-          availableDays,
-          pictures,
-          userId,
-          pricing,
-        });
-
+        const category = await Category.findOne({
+          where: {
+            id: categoryId
+          }
+        })
         const user = await User.findOne({
           where: {
             id: userId,
           },
         });
-        if (user) {
-          user.addSpecialization(newSpecialization);
+
+        if(category && user) {
+          const newSpecialization = await Specialization.create({
+            categoryId,
+            name,
+            description,
+            availableDays,
+            pictures,
+            userId,
+            pricing,
+          });
+          category.addSpecialization(newSpecialization)
+          user.addSpecialization(newSpecialization)
           return res
             .status(201)
             .json({ message: "New specialization created." });
         } else {
-          return res.status(400).json({ message: "No user with that email" });
+          return res  
+            .status(400)
+            .json({ message: "Could not create specialization. Check Id's sent"})
         }
       }
     } catch (e) {
