@@ -244,7 +244,19 @@ router.post("/token", async (req, res) => {
     if (findUser.password === password) {
       const token = jwt.sign(
         //Añadir roles dependiendo del rol en la app
-        { id: findUser.id, fullName: findUser.fullName, role: 1 },
+        { id: findUser.id, 
+          fullName: findUser.fullName,
+          phoneNumber: findUser.phoneNumber,
+          categoryId: findUser.categoryId,
+          email: findUser.email,
+          addres: findUser.addres,
+          password: findUser.password,
+          image: findUser.image,
+          description: findUser.description,
+          birthday: findUser.birthday,
+          isProfessional: findUser.isProfessional,
+          isAdmin: findUser.isAdmin,
+          role: 1 },
         JWT_SECRET,
         {
           expiresIn: "15d",
