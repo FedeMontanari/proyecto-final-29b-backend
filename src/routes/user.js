@@ -250,7 +250,6 @@ router.post("/token", async (req, res) => {
           categoryId: findUser.categoryId,
           email: findUser.email,
           addres: findUser.addres,
-          password: findUser.password,
           image: findUser.image,
           description: findUser.description,
           birthday: findUser.birthday,
