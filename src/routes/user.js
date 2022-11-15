@@ -187,7 +187,16 @@ router.delete("/email/:email", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
       const { email } = req.params;
+      const { restoreuser } = req.query;
       if (!email) return res.status(400).send("Missing value detected.");
+      if (restoreuser) {
+        await User.restore({
+          where: {
+            email: email,
+          },
+        });
+        return res.status(200).json({ message: "User restored." });
+      }
       else {
         let user = await User.findOne({
           where: {
@@ -203,6 +212,7 @@ router.delete("/email/:email", async (req, res) => {
           return res.status(200).send("User deleted.");
         } else res.status(404).send("User with that email could not be found.");
       }
+      
     } catch (e) {
       res.status(400).send(console.log(e));
     }
