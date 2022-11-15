@@ -241,12 +241,11 @@ router.post("/token", async (req, res) => {
       },
     });
     if (!findUser) {
-      return res.status(400).json({ message: "No user found with that email" });
+      return res.status(400).json({ message: "No se encontró un usuario con ese email" });
     }
     if (findUser.password === password) {
       if (findUser.isAdmin) {
         const token = jwt.sign(
-          //Añadir roles dependiendo del rol en la app
           {
             id: findUser.id,
             fullName: findUser.fullName,
@@ -289,7 +288,7 @@ router.post("/token", async (req, res) => {
         return res.status(200).json(token);
       }
     } else {
-      return res.status(400).json({ message: "Password is incorrect" });
+      return res.status(400).json({ message: "Contraseña incorrecta" });
     }
   } else {
     return res.status(400).send("Wrong or missing API key");
