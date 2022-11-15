@@ -86,6 +86,7 @@ router.post("/", async (req, res) => {
         description,
         birthday,
         isProfessional,
+        isAdmin
       } = req.body;
       if (
         !fullName ||
@@ -117,6 +118,7 @@ router.post("/", async (req, res) => {
           description,
           birthday,
           isProfessional,
+          isAdmin
         });
         return res.status(201).send("new User created.");
       }
