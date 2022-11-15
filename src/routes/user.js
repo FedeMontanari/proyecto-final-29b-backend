@@ -86,6 +86,7 @@ router.post("/", async (req, res) => {
         description,
         birthday,
         isProfessional,
+        isAdmin
       } = req.body;
       if (
         !fullName ||
@@ -117,6 +118,7 @@ router.post("/", async (req, res) => {
           description,
           birthday,
           isProfessional,
+          isAdmin
         });
         return res.status(201).send("new User created.");
       }
@@ -249,33 +251,54 @@ router.post("/token", async (req, res) => {
       },
     });
     if (!findUser) {
-      return res.status(400).json({ message: "No user found with that email" });
+      return res.status(400).json({ message: "No se encontró un usuario con ese email" });
     }
     if (findUser.password === password) {
-      const token = jwt.sign(
-        //Añadir roles dependiendo del rol en la app
-        {
-          id: findUser.id,
-          fullName: findUser.fullName,
-          phoneNumber: findUser.phoneNumber,
-          categoryId: findUser.categoryId,
-          email: findUser.email,
-          addres: findUser.addres,
-          image: findUser.image,
-          description: findUser.description,
-          birthday: findUser.birthday,
-          isProfessional: findUser.isProfessional,
-          isAdmin: findUser.isAdmin,
-          role: 1,
-        },
-        JWT_SECRET,
-        {
-          expiresIn: "15d",
-        }
-      );
-      return res.status(200).json(token);
+      if (findUser.isAdmin) {
+        const token = jwt.sign(
+          {
+            id: findUser.id,
+            fullName: findUser.fullName,
+            phoneNumber: findUser.phoneNumber,
+            categoryId: findUser.categoryId,
+            email: findUser.email,
+            addres: findUser.addres,
+            image: findUser.image,
+            description: findUser.description,
+            birthday: findUser.birthday,
+            isProfessional: findUser.isProfessional,
+            role: 9,
+          },
+          JWT_SECRET,
+          {
+            expiresIn: "15d",
+          }
+        );
+        return res.status(200).json(token);
+      } else {
+        const token = jwt.sign(
+          {
+            id: findUser.id,
+            fullName: findUser.fullName,
+            phoneNumber: findUser.phoneNumber,
+            categoryId: findUser.categoryId,
+            email: findUser.email,
+            addres: findUser.addres,
+            image: findUser.image,
+            description: findUser.description,
+            birthday: findUser.birthday,
+            isProfessional: findUser.isProfessional,
+            role: 1,
+          },
+          JWT_SECRET,
+          {
+            expiresIn: "15d",
+          }
+        );
+        return res.status(200).json(token);
+      }
     } else {
-      return res.status(400).json({ message: "Password is incorrect" });
+      return res.status(400).json({ message: "Contraseña incorrecta" });
     }
   } else {
     return res.status(400).send("Wrong or missing API key");

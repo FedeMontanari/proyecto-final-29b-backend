@@ -36,9 +36,6 @@ module.exports = (sequelize) => {
       occupation: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true,
-        validate: {
-          notEmpty: false,
-        }
       },
       address: {
         type: DataTypes.STRING,
@@ -71,13 +68,17 @@ module.exports = (sequelize) => {
         },
       },
       birthday: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
           isDate: true,
         },
       },
       isProfessional: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isAdmin: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
