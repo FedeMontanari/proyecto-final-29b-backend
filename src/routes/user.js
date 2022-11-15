@@ -185,7 +185,16 @@ router.delete("/email/:email", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
       const { email } = req.params;
+      const { restoreuser } = req.query;
       if (!email) return res.status(400).send("Missing value detected.");
+      if (restoreuser) {
+        await User.restore({
+          where: {
+            email: email,
+          },
+        });
+        return res.status(200).json({ message: "User restored." });
+      }
       else {
         let user = await User.findOne({
           where: {
@@ -201,6 +210,7 @@ router.delete("/email/:email", async (req, res) => {
           return res.status(200).send("User deleted.");
         } else res.status(404).send("User with that email could not be found.");
       }
+      
     } catch (e) {
       res.status(400).send(console.log(e));
     }
@@ -244,7 +254,8 @@ router.post("/token", async (req, res) => {
     if (findUser.password === password) {
       const token = jwt.sign(
         //Añadir roles dependiendo del rol en la app
-        { id: findUser.id, 
+        {
+          id: findUser.id,
           fullName: findUser.fullName,
           phoneNumber: findUser.phoneNumber,
           categoryId: findUser.categoryId,
@@ -255,7 +266,8 @@ router.post("/token", async (req, res) => {
           birthday: findUser.birthday,
           isProfessional: findUser.isProfessional,
           isAdmin: findUser.isAdmin,
-          role: 1 },
+          role: 1,
+        },
         JWT_SECRET,
         {
           expiresIn: "15d",
