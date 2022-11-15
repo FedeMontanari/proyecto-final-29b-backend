@@ -1,39 +1,61 @@
 const { Router } = require("express");
-const { Specialization, User} = require("../db");
+const { Specialization, User, Category } = require("../db");
 const { API_KEY } = process.env;
 const router = Router();
 
 router.post("", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
-      const { occupation, generalDescription, availableDays, images, specialities, email } = req.body;
-      if (!occupation || !specialities || !email) {
-        return res.status(400).send("Missing value detected.");
+      const {
+        categoryId,
+        name,
+        description,
+        availableDays,
+        pictures,
+        userId,
+        pricing,
+      } = req.body;
+
+      if (!categoryId || !userId || !description || !name || !pricing) {
+        return res.status(400).json({ message: "Missing value detected." });
       } else {
-        const newSpecialization = await Specialization.create({
-          occupation,
-          generalDescription,
-          availableDays,
-          images,
-          specialities,
-        });
-        const user = await User.findOne({
+        const category = await Category.findOne({
           where: {
-            email: email,
+            id: categoryId
           }
         })
-        if(user) {
-          user.addSpecialization(newSpecialization);
-          return res.status(201).send("New specialization created.");
+        const user = await User.findOne({
+          where: {
+            id: userId,
+          },
+        });
+
+        if(category && user) {
+          const newSpecialization = await Specialization.create({
+            categoryId,
+            name,
+            description,
+            availableDays,
+            pictures,
+            userId,
+            pricing,
+          });
+          category.addSpecialization(newSpecialization)
+          user.addSpecialization(newSpecialization)
+          return res
+            .status(201)
+            .json({ message: "New specialization created." });
         } else {
-          return res.status(400).send("No user with that email")
+          return res  
+            .status(400)
+            .json({ message: "Could not create specialization. Check Id's sent"})
         }
       }
     } catch (e) {
-      return res.status(400).send(console.log(e));
+      return res.status(400).json({ message: "error detected", error: e });
     }
   } else {
-    return res.status(400).send("Wrong or missing API key");
+    return res.status(400).json({ message: "Wrong or missing API key" });
   }
 });
 
@@ -45,8 +67,8 @@ router.get("", async (req, res) => {
         return res.status(200).send("No specializations created yet");
       }
       return res.status(200).json(allSpecs);
-    } catch (error) {
-      return res.status(404).send(console.log(error));
+    } catch (e) {
+      return res.status(400).json({ message: "error detected", error: e });
     }
   } else {
     return res.status(400).send("Wrong or missing API key");
@@ -57,7 +79,15 @@ router.put("/id/:id", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
       const idParam = req.params.id;
-      const { occupation, generalDescription, availableDays, images, specialities } = req.body;
+      const {
+        categoryId,
+        name,
+        description,
+        availableDays,
+        pictures,
+        userId,
+        pricing,
+      } = req.body;
       if (isNaN(idParam)) res.status(400).send("ID must be a number");
       if (idParam) {
         const specialty = await Specialization.findOne({
@@ -67,11 +97,13 @@ router.put("/id/:id", async (req, res) => {
         });
         if (specialty) {
           const updateSpecialty = {
-            occupation,
-            generalDescription,
+            categoryId,
+            name,
+            description,
             availableDays,
-            images,
-            specialities
+            pictures,
+            userId,
+            pricing,
           };
           specialty.update(updateSpecialty);
           return res.status(200).send("Specialization updated successfully.");
@@ -82,7 +114,7 @@ router.put("/id/:id", async (req, res) => {
         return res.status(404).send("Missing value detected.");
       }
     } catch (e) {
-      return res.status(400).send(console.log(e));
+      return res.status(400).json({ message: "error detected", error: e });
     }
   } else {
     return res.status(400).send("Wrong or missing API key");
@@ -111,7 +143,7 @@ router.delete("/id/:id", async (req, res) => {
         } else res.status(404).send("Specialization not found.");
       }
     } catch (e) {
-      res.status(400).send(console.log(e));
+      return res.status(400).json({ message: "error detected", error: e });
     }
   } else {
     return res.status(400).send("Wrong or missing API key");
