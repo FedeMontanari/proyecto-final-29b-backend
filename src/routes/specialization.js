@@ -21,16 +21,16 @@ router.post("", async (req, res) => {
       } else {
         const category = await Category.findOne({
           where: {
-            id: categoryId
-          }
-        })
+            id: categoryId,
+          },
+        });
         const user = await User.findOne({
           where: {
             id: userId,
           },
         });
 
-        if(category && user) {
+        if (category && user) {
           const newSpecialization = await Specialization.create({
             categoryId,
             name,
@@ -40,15 +40,15 @@ router.post("", async (req, res) => {
             userId,
             pricing,
           });
-          category.addSpecialization(newSpecialization)
-          user.addSpecialization(newSpecialization)
+          category.addSpecialization(newSpecialization);
+          user.addSpecialization(newSpecialization);
           return res
             .status(201)
             .json({ message: "New specialization created." });
         } else {
-          return res  
-            .status(400)
-            .json({ message: "Could not create specialization. Check Id's sent"})
+          return res.status(400).json({
+            message: "Could not create specialization. Check Id's sent",
+          });
         }
       }
     } catch (e) {
@@ -79,22 +79,22 @@ router.get("/id/:id", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     const { id } = req.params;
     try {
-      if (isNaN(id)) res.status(400).send("ID must be a number");
+      if (isNaN(id)) res.status(400).json({ message: "ID must be a number" });
       const findSpecialization = await Specialization.findOne({
         where: {
           id: id,
         },
       });
-      if (findSpecialization.length === 0) {
-        res.status(404).send("Specialization not found");
+      if (!findSpecialization) {
+        res.status(404).json({ message: "Specialization not found" });
       } else {
         res.status(200).json(findSpecialization);
       }
     } catch (error) {
-      res.status(400).send(console.log(error));
+      res.status(400).json({ message: "An error occured", error: error });
     }
   } else {
-    return res.status(400).send("Wrong or missing API key");
+    return res.status(400).json({ message: "Wrong or missing API key" });
   }
 });
 
