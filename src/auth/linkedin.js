@@ -6,7 +6,7 @@ const LinkedInStrategy = Linkedin.Strategy;
 const LINKEDIN_OPTIONS = {
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: 'http://192.168.18.9:3001/user/linkedin/callback',
+    callbackURL: 'https://proyecto-final-29b-backend-production.up.railway.app/user/linkedin/callback',
     scope: ["r_emailaddress", "r_liteprofile"]
 }
 
