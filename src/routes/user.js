@@ -396,7 +396,10 @@ router.get(
     try
     {
       const { state } = req.query;
+      console.log(req.user.email);
+      console.log(req.user.password);
       const { returnTo } = JSON.parse(Buffer.from(state, 'base64').toString());
+      console.log(returnTo);
       return res.redirect(`${returnTo}?email=${req.user.email}&password=${req.user.password}`);
     } catch { }
   }
