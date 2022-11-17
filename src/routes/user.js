@@ -377,15 +377,39 @@ router.get("/authorize", passport.authenticate("jwt"), async (req, res) =>
 
 router.get(
   "/linkedin",
-  passport.authenticate("linkedin")
+  (req, res, next) =>
+  {
+    const { returnTo } = req.query;
+    const state = returnTo ? Buffer.from(JSON.stringify({ returnTo })).toString('base64') : undefined;
+    const authenticator = passport.authenticate("linkedin", { state });
+    authenticator(req, res, next);
+  }
 );
 
 router.get(
   "/linkedin/callback",
   passport.authenticate("linkedin", {
-    successRedirect: "/user/authorize",
-    failureRedirect: "/user/login"
-  })
+    failureRedirect: "/user/linkedin/error"
+  }),
+  (req, res) =>
+  {
+    try
+    {
+      const { state } = req.query;
+      console.log(req.user);
+      const { returnTo } = JSON.parse(Buffer.from(state, 'base64').toString());
+      console.log(returnTo);
+      return res.redirect(returnTo);
+    } catch { }
+  }
 );
+
+router.get(
+  "/linkedin/error",
+  async (req, res) =>
+  {
+    res.status(400).json(Error('Usuario no existe'));
+  }
+)
 
 module.exports = router;
