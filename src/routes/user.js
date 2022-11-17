@@ -24,7 +24,7 @@ router.get("/name/:fullName", async (req, res) =>
     {
       const findUser = await User.findAll({
         where: {
-          fullName: { [Op.like]: `%${arr}%` },
+          fullName: { [Op.iLike]: `%${arr}%` },
         },
       });
       if (findUser.length === 0)
@@ -57,12 +57,10 @@ router.get("/id/:id", async (req, res) =>
           id: id,
         },
       });
-      if (findUser.length === 0)
-      {
-        res.status(404).send("User not found");
-      } else
-      {
-        res.status(200).json(findUser);
+      if (findUser) {
+        return res.status(200).json(findUser);
+      } else {
+        return res.status(404).send("User not found");
       }
     } catch (error)
     {

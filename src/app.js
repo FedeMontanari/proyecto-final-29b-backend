@@ -12,6 +12,8 @@ const { User } = require("./db");
 const { LinkedInStrategy, LINKEDIN_OPTIONS } = require("./auth/linkedin.js");
 const { JWT_SECRET } = process.env;
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+
 passport.use(
   new PassportLocal.Strategy(
     {
