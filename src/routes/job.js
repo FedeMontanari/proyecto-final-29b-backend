@@ -1,6 +1,8 @@
 const { Router } = require("express");
-const { Job } = require("../db");
+const { Job, User } = require("../db");
 const { Op } = require("sequelize");
+const clientMail = require("../emailer/clientMail");
+const professionalMail = require("../emailer/professionalMail")
 const { API_KEY } = process.env;
 const router = Router();
 
@@ -17,10 +19,30 @@ router.post("", async (req, res) => {
       if (!clientId || !professionalId || !specializationId) {
         return res.status(400).send("missing value detected.");
       } else {
+        const client = await User.findOne({
+          where: {
+            id: clientId,
+          },
+        });
+        const professional = await User.findOne({
+          where: {
+            id: professionalId,
+          },
+        });
+        if (client) {
+          clientMail.sendClientMail(client);
+        } else {
+          return res.status(404).send("No user with that 'clientId'");
+        }
+        if (professional) {
+          professionalMail.sendProfessionalMail(professional);
+        } else {
+          return res.status(404).send("No user with that 'professionalId'");
+        }
         const newCategory = await Job.create({
           clientId,
           professionalId,
-          specializationId
+          specializationId,
         });
         return res.status(201).send("new Job created.");
       }
@@ -36,7 +58,7 @@ router.get("", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
       const allJobs = await Job.findAll();
-      console.log(allJobs)
+      console.log(allJobs);
       return res.json(allJobs);
     } catch (error) {
       return res.status(404).send(console.log(error));
@@ -73,7 +95,7 @@ router.get("/job/:id", async (req, res) => {
 router.put("/job/:id", async (req, res) => {
   if (API_KEY === req.query.apikey) {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const { clientId, professionalId, specializationId } = req.body;
       if (!id) return res.status(400).send("Missing value detected.");
       if (isNaN(id)) return res.status(400).send("ID must be a number");
@@ -87,9 +109,9 @@ router.put("/job/:id", async (req, res) => {
           const updatedJob = {
             clientId: clientId,
             professionalId: professionalId,
-            specializationId: specializationId
+            specializationId: specializationId,
           };
-          console.log(updatedJob)
+          console.log(updatedJob);
           toUpdateJob.update(updatedJob);
           return res.status(200).send("Job updated successfully.");
         } else {
