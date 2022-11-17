@@ -46,10 +46,10 @@ router.get("/id/:id", async (req, res) => {
           id: id,
         },
       });
-      if (!findUser) {
-        res.status(404).send("User not found");
+      if (findUser) {
+        return res.status(200).json(findUser);
       } else {
-        res.status(200).json(findUser);
+        return res.status(404).send("User not found");
       }
     } catch (error) {
       res.status(400).send(console.log(error));
