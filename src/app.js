@@ -10,6 +10,8 @@ const PassportJWT = require("passport-jwt");
 const { User } = require("./db");
 const { JWT_SECRET } = process.env;
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+
 passport.use(
   new PassportLocal.Strategy(
     {
