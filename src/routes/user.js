@@ -6,75 +6,98 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const router = Router();
 
-router.get("/name/:fullName", async (req, res) => {
-  if (API_KEY === req.query.apikey) {
+router.get("/name/:fullName", async (req, res) =>
+{
+  if (API_KEY === req.query.apikey)
+  {
     let { fullName } = req.params;
     let arr = fullName.split(" ");
-    arr = arr.map((e) => {
+    arr = arr.map((e) =>
+    {
       let word = e.split("");
       word[0] = word[0].toUpperCase();
       word = word.join("");
       return word;
     });
     arr = arr.join(" ");
-    try {
+    try
+    {
       const findUser = await User.findAll({
         where: {
           fullName: { [Op.like]: `%${arr}%` },
         },
       });
-      if (findUser.length === 0) {
+      if (findUser.length === 0)
+      {
         res.status(400).send("Name not found");
-      } else {
+      } else
+      {
         res.status(200).json(findUser);
       }
-    } catch (error) {
+    } catch (error)
+    {
       res.status(400).send(console.log(error));
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
 
-router.get("/id/:id", async (req, res) => {
-  if (API_KEY === req.query.apikey) {
+router.get("/id/:id", async (req, res) =>
+{
+  if (API_KEY === req.query.apikey)
+  {
     const { id } = req.params;
-    try {
+    try
+    {
       if (isNaN(id)) res.status(400).send("ID must be a number");
       const findUser = await User.findOne({
         where: {
           id: id,
         },
       });
-      if (findUser.length === 0) {
+      if (findUser.length === 0)
+      {
         res.status(404).send("User not found");
-      } else {
+      } else
+      {
         res.status(200).json(findUser);
       }
-    } catch (error) {
+    } catch (error)
+    {
       res.status(400).send(console.log(error));
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
 
-router.get("/", async (req, res) => {
-  if (API_KEY === req.query.apikey) {
-    try {
+router.get("/", async (req, res) =>
+{
+  if (API_KEY === req.query.apikey)
+  {
+    try
+    {
       const allUsers = await User.findAll();
       return res.json(allUsers);
-    } catch (error) {
+    } catch (error)
+    {
       return res.status(404).send(console.log(error));
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
 
-router.post("/", async (req, res) => {
-  if (API_KEY === req.query.apikey) {
-    try {
+router.post("/", async (req, res) =>
+{
+  if (API_KEY === req.query.apikey)
+  {
+    try
+    {
       const {
         fullName,
         phoneNumber,
@@ -96,15 +119,18 @@ router.post("/", async (req, res) => {
         !password ||
         !description ||
         !birthday
-      ) {
+      )
+      {
         return res.status(400).send("Missing value detected.");
-      } else {
+      } else
+      {
         const oldUser = await User.findOne({
           where: {
             email: email,
           },
         });
-        if (oldUser) {
+        if (oldUser)
+        {
           return res.status(400).send("User with that email already exists");
         }
         const newUser = await User.create({
@@ -122,16 +148,20 @@ router.post("/", async (req, res) => {
         });
         return res.status(201).send("new User created.");
       }
-    } catch (e) {
+    } catch (e)
+    {
       return res.status(400).send(console.log(e));
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
 
-router.put("/email/:email", async (req, res) => {
-  if (API_KEY === req.query.apikey) {
+router.put("/email/:email", async (req, res) =>
+{
+  if (API_KEY === req.query.apikey)
+  {
     const paramEmail = req.params.email;
     const {
       fullName,
@@ -145,14 +175,17 @@ router.put("/email/:email", async (req, res) => {
       birthday,
       isProfessional,
     } = req.body;
-    try {
-      if (paramEmail) {
+    try
+    {
+      if (paramEmail)
+      {
         const user = await User.findOne({
           where: {
             email: paramEmail,
           },
         });
-        if (user) {
+        if (user)
+        {
           const updatedUser = {
             fullName,
             phoneNumber,
@@ -167,29 +200,37 @@ router.put("/email/:email", async (req, res) => {
           };
           user.update(updatedUser);
           return res.status(200).send("User updated succcessfully");
-        } else {
+        } else
+        {
           return res
             .status(404)
             .send("An user with that email could not be found");
         }
-      } else {
+      } else
+      {
         return res.status(404).send("Missing value detected");
       }
-    } catch (error) {
+    } catch (error)
+    {
       return res.status(400).send(console.log(error));
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
 
-router.delete("/email/:email", async (req, res) => {
-  if (API_KEY === req.query.apikey) {
-    try {
+router.delete("/email/:email", async (req, res) =>
+{
+  if (API_KEY === req.query.apikey)
+  {
+    try
+    {
       const { email } = req.params;
       const { restoreuser } = req.query;
       if (!email) return res.status(400).send("Missing value detected.");
-      if (restoreuser) {
+      if (restoreuser)
+      {
         await User.restore({
           where: {
             email: email,
@@ -197,13 +238,15 @@ router.delete("/email/:email", async (req, res) => {
         });
         return res.status(200).json({ message: "User restored." });
       }
-      else {
+      else
+      {
         let user = await User.findOne({
           where: {
             email: email,
           },
         });
-        if (user) {
+        if (user)
+        {
           User.destroy({
             where: {
               email: email,
@@ -212,24 +255,31 @@ router.delete("/email/:email", async (req, res) => {
           return res.status(200).send("User deleted.");
         } else res.status(404).send("User with that email could not be found.");
       }
-      
-    } catch (e) {
+
+    } catch (e)
+    {
       res.status(400).send(console.log(e));
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
 
-router.post("/bulk", async (req, res) => {
-  if (API_KEY === req.query.apikey) {
-    try {
+router.post("/bulk", async (req, res) =>
+{
+  if (API_KEY === req.query.apikey)
+  {
+    try
+    {
       const newUsers = await User.bulkCreate(req.body);
       return res.status(200).send("Bulk created Pog");
-    } catch (e) {
+    } catch (e)
+    {
       return res.status(400).send(console.log(e));
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
@@ -237,24 +287,30 @@ router.post("/bulk", async (req, res) => {
 router.post(
   "/login",
   passport.authenticate("local", { failureMessage: true }),
-  async (req, res) => {
+  async (req, res) =>
+  {
     res.send("Successful login");
   }
 );
 
-router.post("/token", async (req, res) => {
+router.post("/token", async (req, res) =>
+{
   const { email, password } = req.body;
-  if (API_KEY === req.query.apikey) {
+  if (API_KEY === req.query.apikey)
+  {
     const findUser = await User.findOne({
       where: {
         email: email,
       },
     });
-    if (!findUser) {
+    if (!findUser)
+    {
       return res.status(400).json({ message: "No se encontró un usuario con ese email" });
     }
-    if (findUser.password === password) {
-      if (findUser.isAdmin) {
+    if (findUser.password === password)
+    {
+      if (findUser.isAdmin)
+      {
         const token = jwt.sign(
           {
             id: findUser.id,
@@ -275,7 +331,8 @@ router.post("/token", async (req, res) => {
           }
         );
         return res.status(200).json(token);
-      } else {
+      } else
+      {
         const token = jwt.sign(
           {
             id: findUser.id,
@@ -297,20 +354,38 @@ router.post("/token", async (req, res) => {
         );
         return res.status(200).json(token);
       }
-    } else {
+    } else
+    {
       return res.status(400).json({ message: "Contraseña incorrecta" });
     }
-  } else {
+  } else
+  {
     return res.status(400).send("Wrong or missing API key");
   }
 });
 
-router.get("/authorize", passport.authenticate("jwt"), async (req, res) => {
-  try {
+router.get("/authorize", passport.authenticate("jwt"), async (req, res) =>
+{
+  try
+  {
     res.status(200).json({ message: "User is authorized" });
-  } catch (error) {
+  } catch (error)
+  {
     res.status(400).json({ error: error });
   }
 });
+
+router.get(
+  "/linkedin",
+  passport.authenticate("linkedin")
+);
+
+router.get(
+  "/linkedin/callback",
+  passport.authenticate("linkedin", {
+    successRedirect: "/user/authorize",
+    failureRedirect: "/user/login"
+  })
+);
 
 module.exports = router;
