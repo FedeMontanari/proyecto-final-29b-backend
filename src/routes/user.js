@@ -57,9 +57,11 @@ router.get("/id/:id", async (req, res) =>
           id: id,
         },
       });
-      if (findUser) {
+      if (findUser)
+      {
         return res.status(200).json(findUser);
-      } else {
+      } else
+      {
         return res.status(404).send("User not found");
       }
     } catch (error)
@@ -394,10 +396,7 @@ router.get(
     try
     {
       const { state } = req.query;
-      console.log(req.user.email);
-      console.log(req.user.password);
       const { returnTo } = JSON.parse(Buffer.from(state, 'base64').toString());
-      console.log(returnTo);
       return res.redirect(`${returnTo}?email=${req.user.email}&password=${req.user.password}`);
     } catch { }
   }
